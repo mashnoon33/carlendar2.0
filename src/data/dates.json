@@ -1,0 +1,21 @@
+{
+	"dates": {
+		"twentyTwenty": {
+			"fall": {
+				"name": "Fall",
+				"start": "09/14/2020",
+				"end": "11/18/2020"
+			},
+			"winter": {
+				"name": "Winter",
+				"start": "01/06/2020",
+				"end": "03/11/2020"
+			},
+			"spring": {
+				"name": "Spring",
+				"start": "03/30/2020",
+				"end": "06/03/2020"
+			}
+		}
+	}
+}
