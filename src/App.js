@@ -1,14 +1,5 @@
 import React, { Component } from "react";
-import {
-	Box,
-	Collapsible,
-	Heading,
-	Grommet,
-	Text,
-	Stack,
-	ResponsiveContext,
-} from "grommet";
-import { FormClose, Notification } from "grommet-icons";
+import { Box, Grommet, Text, Stack, ResponsiveContext } from "grommet";
 import * as data from "./data/dates.json";
 import * as courses from "./data/output.json";
 
@@ -710,22 +701,24 @@ class App extends Component {
 										top: "small",
 										bottom: "small",
 									}}
+									width={size === "small" ? "medium" : "large"}
 									// margin='xlarge'
 									// pad='large'
 									align='center'
 									justify='center'
 									gap='small'
-									fill='horizontal'
+									// fill='horizontal'
 								>
 									<Box
 										direction='column'
 										flex={false}
-										width='large'
+										fill='horizontal'
+										// width='large'
 										align='start'
 										gap='msall'
 									>
 										<Box
-											flex={false}
+											// flex={false}
 											pad={{
 												bottom: "small",
 											}}
