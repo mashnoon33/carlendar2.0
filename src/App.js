@@ -24,20 +24,6 @@ const theme = {
 	},
 };
 
-const AppBar = props => (
-	<Box
-		tag='header'
-		direction='row'
-		align='center'
-		justify='between'
-		background='#f2f2f2'
-		pad={{ left: "medium", right: "small", vertical: "small" }}
-		elevation='medium'
-		style={{ zIndex: "1" }}
-		{...props}
-	/>
-);
-
 const optionProps = [
 	"disableDblClick",
 	"isReadOnly",
@@ -577,6 +563,8 @@ class App extends Component {
 
 		this.bindEventHandlers(this.props);
 		this.calendarInst.setDate(moment(this.term.start).toDate());
+		this.calendarInst.toggleScheduleView(false);
+		this.calendarInst.toggleTaskView(["task"]);
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -630,7 +618,6 @@ class App extends Component {
 
 	setSchedules(schedules) {
 		if (schedules && schedules.length) {
-			console.log("This also ran");
 			this.calendarInst.createSchedules(schedules);
 		}
 	}
@@ -677,9 +664,29 @@ class App extends Component {
 				<ResponsiveContext.Consumer>
 					{size => (
 						<Box fill>
-							<AppBar>
-								<h3>🗓 Carlendar</h3>
-							</AppBar>
+							<Box
+								tag='header'
+								direction='row'
+								align='center'
+								justify='between'
+								background='#f2f2f2'
+								pad={{
+									left: "medium",
+									right: "small",
+									vertical: size === "small" ? "medium" : "small",
+								}}
+								elevation='medium'
+								style={{ zIndex: "1" }}
+							>
+								<Text size='medium' weight='bold' color='#636363'>
+									{" "}
+									🍞 CARLENDAR
+								</Text>
+								<Text size='medium' weight='300' color='#9c9c9c'>
+									{" "}
+									{this.term.name + " " + 2020}{" "}
+								</Text>
+							</Box>
 							<Stack anchor='bottom' fill>
 								<Box fill color='red'>
 									<div ref={this.rootEl} style={{ height: "100%" }} />
@@ -723,7 +730,7 @@ class App extends Component {
 												bottom: "small",
 											}}
 										>
-											<Text size='20px'> Carlendar</Text>
+											<Text size='20px'> </Text>
 										</Box>
 										<Dropdown
 											fluid
@@ -755,20 +762,8 @@ class App extends Component {
 
 									<Button
 										positive
-										// disabled={this.state.selected.length === 0}
+										disabled={this.state.selected.length === 0}
 										onClick={() => {
-											var sc = [
-												{
-													id: "1",
-													calendarId: "1",
-													title: "my schedule",
-													category: "time",
-													dueDateClass: "",
-													start: "2019-12-26T02:30:00+09:00",
-													end: "2019-12-26T14:30:00+09:30",
-												},
-											];
-
 											createEvents(this.events, (error, value) => {
 												if (error) {
 													console.log(error);
