@@ -680,7 +680,7 @@ class App extends Component {
 							>
 								<Text size='medium' weight='bold' color='#636363'>
 									{" "}
-									🍞 CARLENDAR
+									🥨 CARLENDAR
 								</Text>
 								<Text size='medium' weight='300' color='#9c9c9c'>
 									{" "}
