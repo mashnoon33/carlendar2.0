@@ -563,7 +563,7 @@ class App extends Component {
 
 		this.bindEventHandlers(this.props);
 		this.calendarInst.setDate(moment(this.term.start).toDate());
-		this.calendarInst.toggleScheduleView(false);
+		this.calendarInst.toggleScheduleView(["time"]);
 		this.calendarInst.toggleTaskView(["task"]);
 	}
 
@@ -697,14 +697,14 @@ class App extends Component {
 									elevation='medium'
 									round='small'
 									margin={{
-										left: size == "small" ? "large" : "small",
-										right: size == "small" ? "large" : "small",
+										left: size === "small" ? "large" : "small",
+										right: size === "small" ? "large" : "small",
 										top: "xlarge",
 										bottom: "xlarge",
 									}}
 									pad={{
-										left: size == "small" ? "large" : "small",
-										right: size == "small" ? "large" : "small",
+										left: size === "small" ? "large" : "small",
+										right: size === "small" ? "large" : "small",
 										top: "small",
 										bottom: "small",
 									}}
