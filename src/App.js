@@ -35,6 +35,19 @@ const optionProps = [
 	"week",
 ];
 
+function exists(array, key, val) {
+	return array.some(function(item) {
+		return item[key] === val;
+	});
+}
+
+function get(array, key, val) {
+	var result = array.filter(function(item) {
+		return item[key] === val;
+	});
+
+	return result ? result[0] : null; // or undefined
+}
 class App extends Component {
 	state = {
 		showSidebar: false,
@@ -47,6 +60,23 @@ class App extends Component {
 	toastEvents = [];
 
 	schedule = [];
+
+	colors = [
+		"#e6194B",
+		" #3cb44b",
+		" #4363d8",
+		" #f58231",
+		" #911eb4",
+		" #42d4f4",
+		" #fabebe",
+		" #469990",
+		" #9A6324",
+		" #800000",
+		" #808000",
+		" #000075",
+	];
+
+	usedColor = [];
 
 	findTerm() {
 		var now = moment();
@@ -178,7 +208,10 @@ class App extends Component {
 				dueDateClass: "",
 				isReadOnly: true,
 				title: item.title,
+				color: "#FFFFFF",
+				location: item.location,
 			};
+
 			//["2020", "1", "6", "13", "50"]
 			//2013-02-08 09:30
 			event.id = index.toString();
@@ -193,7 +226,18 @@ class App extends Component {
 			event.end = moment(ie.slice(0, 3).join("-") + " " + ie[3] + ":" + ie[4])
 				.toDate()
 				.toISOString();
-			console.log(event);
+
+			var bgColor = get(this.usedColor, "title", item.title);
+			if (bgColor == null) {
+				bgColor = this.colors.pop();
+				this.usedColor.push({
+					title: item.title,
+					color: bgColor,
+				});
+			} else {
+				bgColor = bgColor.color;
+			}
+			event.bgColor = bgColor;
 			this.schedule.push(event);
 			index++;
 		}
@@ -557,6 +601,9 @@ class App extends Component {
 		this.calendarInst = new TuiCalendar(this.rootEl.current, {
 			...this.props,
 			defaultView: view,
+			disableClick: true,
+			disableDblClick: true,
+			isReadOnly: true,
 		});
 
 		this.setSchedules(schedules);
@@ -762,18 +809,20 @@ class App extends Component {
 
 									<Button
 										positive
-										disabled={this.state.selected.length === 0}
+										// disabled={this.events.length === 0}
 										onClick={() => {
-											createEvents(this.events, (error, value) => {
-												if (error) {
-													console.log(error);
-													return;
-												}
-												var blob = new Blob([value], {
-													type: "text/plain;charset=utf-8",
+											if (this.events.length !== 0) {
+												createEvents(this.events, (error, value) => {
+													if (error) {
+														console.log(error);
+														return;
+													}
+													var blob = new Blob([value], {
+														type: "text/plain;charset=utf-8",
+													});
+													saveAs(blob, "ical.ics");
 												});
-												saveAs(blob, "ical.ics");
-											});
+											}
 											// this.setSchedules(sc);
 
 											// this.parse(this.state.selected);
