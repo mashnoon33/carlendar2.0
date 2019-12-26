@@ -1,13 +1,54 @@
+// Grommet
 import React, { Component } from "react";
 import { Box, Grommet, Text, Stack, ResponsiveContext } from "grommet";
-import * as data from "./data/dates.json";
-import * as courses from "./data/output.json";
 
+// Data
+import * as data from "./data/dates.json";
+// {
+// 	"dates": {
+// 		"twentyTwenty": {
+// 			"fall": {
+// 				"name": "Fall",
+// 				"start": "09/14/2020",
+// 				"end": "11/18/2020"
+// 			},
+// 			...
+// 		}
+// 	}
+// }
+
+import * as courses from "./data/output.json";
+// [
+// 	{
+// 		value: 0,  // Each entry has a index key for efficiency
+// 		key: "AFST 112.00",
+// 		id: "AFST 112.00",
+// 		text: "(AFST 112.00) Black Revolution on Campus",
+// 		credits: "6 credits",
+// 		location: "Leighton 304",
+// 		instructor: "Charisse E Burden-Stelly",
+// 		mo: null,
+// 		tu: "3:10 pm - 4:55 pm",
+// 		we: null,
+// 		th: "3:10 pm - 4:55 pm",
+// 		fr: null,
+// 		mo_lab: null,
+// 		tu_lab: null,
+// 		we_lab: null,
+// 		th_lab: null,
+// 		fr_lab: null,
+// 		url:"https://apps.carleton.edu/campus/registrar/schedule/enroll/?term=20WI&subject=AFST",
+// 	},
+// 	...
+// ]
+// Time + Ics
 import moment from "moment";
-import { createEvents, createEvent } from "ics";
+import { createEvents } from "ics";
 import { saveAs } from "file-saver";
+// Semantic
 import { Dropdown, Button } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+//Toast
 import TuiCalendar from "tui-calendar";
 import "tui-calendar/dist/tui-calendar.css";
 
@@ -79,6 +120,7 @@ class App extends Component {
 	usedColor = [];
 
 	findTerm() {
+		// Finds the current Carleton term or if on break, next term
 		var now = moment();
 		var nextTerm = null;
 		for (const prop in data.dates.twentyTwenty) {
@@ -102,7 +144,7 @@ class App extends Component {
 		}
 		return nextTerm;
 	}
-
+	// Testing code
 	test(list) {
 		var ed, mwf, mwf_lab, tth, tth_lab, some, none, err; //25 162 3 112 2 88 304 0
 
@@ -134,16 +176,17 @@ class App extends Component {
 		}
 		console.log(ed, mwf, mwf_lab, tth, tth_lab, some, none, err);
 	}
-
+	// Takes in a list of array indexes, and processes those courses
 	parse(list) {
+		// Reset arrays everytime parse is called
 		this.schedule = [];
 		this.events = [];
 		this.toastEvents = [];
 
-		console.log("This ran");
 		for (const item of list) {
 			const course = courses.default[item];
 
+			// First three cases check for the most common type of recurrance to leverage RRULES intead of creating seperate entries
 			if (this.everyDay(course)) {
 				this.events.push(this.evalMonday(course));
 				this.events.push(this.evalTuesday(course));
@@ -181,28 +224,19 @@ class App extends Component {
 				console.log("ERROR");
 				console.log(course);
 			}
-			//toast
+
+			// For toast, we seperately parse events since it doesn't display rrules
 			var singles = this.iterateThrough(course, false);
 			for (const single of singles) {
 				this.toastEvents.push(single);
 			}
 		}
 
-		// {
-		// 	id: '1',
-		// 	calendarId: '1',
-		// 	title: 'my schedule',
-		// 	category: 'time',
-		// 	dueDateClass: '',
-		// 	start: '2018-01-18T22:30:00+09:00',
-		// 	end: '2018-01-19T02:30:00+09:00'
-		// 	isReadOnly: true    // schedule is read-only
-
-		// },
-		var index = 0;
+		var index = 0; // Toast event index
 
 		for (const item of this.toastEvents) {
 			var event = {
+				// Toast event
 				calendarId: "1",
 				category: "time",
 				dueDateClass: "",
@@ -212,14 +246,11 @@ class App extends Component {
 				location: item.location,
 			};
 
-			//["2020", "1", "6", "13", "50"]
-			//2013-02-08 09:30
+			//["2020", "1", "6", "13", "50"] // ICS date array
+			//2013-02-08 09:30 // Moment target
 			event.id = index.toString();
-			// event.recurrenceRule = item.recurrenceRule;
-			var is = item.start.map(String);
+			var is = item.start.map(String); // convery int arrays to str arrays
 			var ie = item.end.map(String);
-			console.log(ie.slice(0, 3).join("-") + " " + ie[3] + ":" + ie[4]);
-			console.log(ie.slice(0, 3).join("-") + " " + ie[3] + ":" + ie[4]);
 			event.start = moment(is.slice(0, 3).join("-") + " " + is[3] + ":" + is[4])
 				.toDate()
 				.toISOString();
@@ -227,6 +258,7 @@ class App extends Component {
 				.toDate()
 				.toISOString();
 
+			// Makes sure that each course has a consistend hex color (since a course might have multiple even't entries)
 			var bgColor = get(this.usedColor, "title", item.title);
 			if (bgColor == null) {
 				bgColor = this.colors.pop();
@@ -241,11 +273,10 @@ class App extends Component {
 			this.schedule.push(event);
 			index++;
 		}
-		for (const i of [0, 1, 2, 3, 4, 5, 6]) {
-			this.calendarInst.deleteSchedule(i.toString(), "1", false);
-		}
-		console.log(this.schedule);
-		this.setSchedules(this.schedule);
+		// for (const i of [0, 1, 2, 3, 4, 5, 6]) { // Reset calendar everytime parse is run? Unecesarry?
+		// 	this.calendarInst.deleteSchedule(i.toString(), "1", false);
+		// }
+		this.setSchedules(this.schedule); // Updates toast schedule
 	}
 	evalTuesday(course) {
 		var event = {
@@ -584,8 +615,7 @@ class App extends Component {
 		return true;
 	}
 
-	//Calendar
-
+	//TOAST
 	rootEl = React.createRef();
 
 	static defaultProps = {
@@ -605,9 +635,8 @@ class App extends Component {
 			disableDblClick: true,
 			isReadOnly: true,
 		});
-
+		// config
 		this.setSchedules(schedules);
-
 		this.bindEventHandlers(this.props);
 		this.calendarInst.setDate(moment(this.term.start).toDate());
 		this.calendarInst.toggleScheduleView(["time"]);
@@ -823,9 +852,6 @@ class App extends Component {
 													saveAs(blob, "ical.ics");
 												});
 											}
-											// this.setSchedules(sc);
-
-											// this.parse(this.state.selected);
 										}}
 									>
 										Download
