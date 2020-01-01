@@ -1,6 +1,7 @@
 // Grommet
 import React, { Component } from "react";
 import { Box, Grommet, Text, Stack, ResponsiveContext } from "grommet";
+import { isMobile } from "react-device-detect";
 
 // Data
 import * as data from "./data/dates.json";
@@ -504,7 +505,9 @@ class App extends Component {
 
 		event.recurrenceRule =
 			"FREQ=WEEKLY;BYDAY=" +
-			(day.includes("lab") ? day.split("_")[0].toUpperCase() : day.toUpperCase()) +
+			(day.includes("lab")
+				? day.split("_")[0].toUpperCase()
+				: day.toUpperCase()) +
 			";INTERVAL=1;UNTIL=" +
 			end.year().toString() +
 			(end.month() < 9
@@ -520,7 +523,9 @@ class App extends Component {
 
 		var start;
 
-		var dayInNeed = day.includes("lab") ? lab_days.indexOf(day) : days.indexOf(day); //Finds dayIndex
+		var dayInNeed = day.includes("lab")
+			? lab_days.indexOf(day)
+			: days.indexOf(day); //Finds dayIndex
 		// if we haven't yet passed the day of the week that I need:
 		if (termStart <= dayInNeed) {
 			// then just give me this week's instance of that day
@@ -765,7 +770,11 @@ class App extends Component {
 							</Box>
 							<Stack anchor='bottom' fill>
 								<Box fill color='red'>
-									<div ref={this.rootEl} style={{ height: "100%" }} />
+									{isMobile ? (
+										<div ref={this.rootEl} style={{ height: "100%" }} />
+									) : (
+										<Box />
+									)}
 								</Box>
 
 								<Box
