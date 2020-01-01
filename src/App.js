@@ -770,7 +770,7 @@ class App extends Component {
 							</Box>
 							<Stack anchor='bottom' fill>
 								<Box fill color='red'>
-									{isMobile ? (
+									{!isMobile ? (
 										<div ref={this.rootEl} style={{ height: "100%" }} />
 									) : (
 										<Box />
