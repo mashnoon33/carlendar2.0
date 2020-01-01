@@ -504,7 +504,7 @@ class App extends Component {
 
 		event.recurrenceRule =
 			"FREQ=WEEKLY;BYDAY=" +
-			(labOnly ? day.split("_")[0].toUpperCase() : day.toUpperCase()) +
+			(day.includes("lab") ? day.split("_")[0].toUpperCase() : day.toUpperCase()) +
 			";INTERVAL=1;UNTIL=" +
 			end.year().toString() +
 			(end.month() < 9
@@ -520,7 +520,7 @@ class App extends Component {
 
 		var start;
 
-		var dayInNeed = labOnly ? lab_days.indexOf(day) : days.indexOf(day); //Finds dayIndex
+		var dayInNeed = day.includes("lab") ? lab_days.indexOf(day) : days.indexOf(day); //Finds dayIndex
 		// if we haven't yet passed the day of the week that I need:
 		if (termStart <= dayInNeed) {
 			// then just give me this week's instance of that day
@@ -847,7 +847,7 @@ class App extends Component {
 														return;
 													}
 													var blob = new Blob([value], {
-														type: "text/plain;charset=utf-8",
+														type: "text/calendar",
 													});
 													saveAs(blob, "ical.ics");
 												});
