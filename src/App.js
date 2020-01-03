@@ -274,9 +274,10 @@ class App extends Component {
 			this.schedule.push(event);
 			index++;
 		}
-		// for (const i of [0, 1, 2, 3, 4, 5, 6]) { // Reset calendar everytime parse is run? Unecesarry?
-		// 	this.calendarInst.deleteSchedule(i.toString(), "1", false);
-		// }
+		for (const i of [0, 1, 2, 3, 4, 5, 6]) {
+			// Reset calendar everytime parse is run? Unecesarry?
+			this.calendarInst.deleteSchedule(i.toString(), "1", false);
+		}
 		this.setSchedules(this.schedule); // Updates toast schedule
 	}
 	evalTuesday(course) {
@@ -286,6 +287,8 @@ class App extends Component {
 			title: null,
 			description: null,
 			location: null,
+			startOutputType: "local",
+			endOutputType: "local",
 		};
 
 		event.location = course.location;
@@ -342,6 +345,8 @@ class App extends Component {
 			title: null,
 			description: null,
 			location: null,
+			startOutputType: "local",
+			endOutputType: "local",
 		};
 
 		event.location = course.location;
@@ -400,6 +405,8 @@ class App extends Component {
 			title: null,
 			description: null,
 			location: null,
+			startOutputType: "local",
+			endOutputType: "local",
 		};
 
 		event.location = course.location;
@@ -496,6 +503,8 @@ class App extends Component {
 			title: null,
 			description: null,
 			location: null,
+			startOutputType: "local",
+			endOutputType: "local",
 		};
 
 		event.location = course.location;
