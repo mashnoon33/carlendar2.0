@@ -1,8 +1,6 @@
 // Grommet
 import React, { Component } from "react";
 import { Box, Grommet, Text, Stack, ResponsiveContext } from "grommet";
-import { isMobile } from "react-device-detect";
-
 // Data
 import * as data from "./data/dates.json";
 // {
@@ -778,12 +776,8 @@ class App extends Component {
 								</Text>
 							</Box>
 							<Stack anchor='bottom' fill>
-								<Box fill color='red'>
-									{!isMobile ? (
-										<div ref={this.rootEl} style={{ height: "100%" }} />
-									) : (
-										<Box />
-									)}
+								<Box fill>
+									<div ref={this.rootEl} style={{ height: "100%" }} />
 								</Box>
 
 								<Box
