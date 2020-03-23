@@ -185,6 +185,8 @@ class App extends Component {
 		for (const item of list) {
 			const course = courses.default[item];
 
+			console.log(course);
+
 			// First three cases check for the most common type of recurrance to leverage RRULES intead of creating seperate entries
 			if (this.everyDay(course)) {
 				this.events.push(this.evalMonday(course));
@@ -743,6 +745,7 @@ class App extends Component {
 		// console.log(options);
 		// console.log(courses);
 		this.term = this.findTerm();
+		console.log(this.term);
 		// this.test(courses.default);
 		// this.parse([281]);
 		// console.log(this.parse([courses[23]]));
